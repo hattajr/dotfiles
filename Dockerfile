@@ -1,7 +1,7 @@
 # ubuntu 20.04
 FROM ubuntu:20.04
 
-WORKDIR /home
+WORKDIR $HOME
 
 COPY . .
 

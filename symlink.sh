@@ -1,3 +1,4 @@
+# this will create links to $HOME directory
 ln -snf ~/.dotfiles/.config ~/
 ln -s -f ~/.dotfiles/.gitconfig ~/
 ln -s -f ~/.dotfiles/.bashrc ~/

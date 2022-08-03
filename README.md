@@ -1,18 +1,17 @@
-## setup nvim 
+## setup nvim
+
 note: Assume you have neovim >= 0.5
+
 1. clone the repo in the `$HOME` directory
 
     ```bash
     git clone https://github.com/hattajr/dotfiles.git ~/.dotfiles
     ```
-    
-2. Link directory from `.dotfiles` to `.config`
+
+2. Create sysmlink directory from `.dotfiles` to `$HOME`
 
     ```bash
-    ln -s ~/.dotfiles/nvim ~/.config/
-    ```
-    
+    chmod +x ~/.dotfiles/symlink.sh
+    ~/.dotfiles/symlink.sh
+
 3. Open `nvim` and `:PluginInstall`
-
-
-

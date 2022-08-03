@@ -9,6 +9,9 @@
 #umask 022
 
 # if running bash
+alias vim="nvim"
+alias git="git"
+
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then

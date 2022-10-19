@@ -3,8 +3,8 @@ if exists('g:vscode')
 else
 	source ~/.config/nvim/general/settings.vim 
 	source ~/.config/nvim/keys/mappings.vim 
-  source ~/.config/nvim/vim-plug/plugins.vim
-  source ~/.config/nvim/after/themes/tokyonight.vim
+    source ~/.config/nvim/vim-plug/plugins.vim
+    source ~/.config/nvim/after/themes/tokyonight.vim
 endif
 
 	

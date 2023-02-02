@@ -9,11 +9,6 @@ note: Assume you have neovim >= 0.5
     ```
 1. Install nvim > 0.5
 
-1. Instal vim-plug
-	```bash
-	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-	```
 1. Install git
 
 1. Install zsh 

@@ -1,6 +1,7 @@
 " set leader key
-let g:mapleader = "\<Space>"
-set relativenumber                                                                      
+let mapleader = "\<Space>"
+set relativenumber
+set scrolloff=9
 set shiftwidth=4                                                                        
 set hidden                                                                              
 set nohlsearch                                                                          

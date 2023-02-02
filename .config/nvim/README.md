@@ -20,4 +20,3 @@
       ```
 1. Install **which-key** vscode extension and copy the **which-key** extension settings from  `setting.json` file into you vscode settings.
 1. You also need to copy the `keybindings.json` file into your vscode settings (vscode `keybindings.json`).
-  

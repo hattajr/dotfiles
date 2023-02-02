@@ -13,7 +13,9 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' } 
     " Better Syntax Support
     Plug 'sheerun/vim-polyglot'
-    " File Explorer
+    " Copilot
+    Plug 'github/copilot.vim'
+    "File Explorer
     Plug 'scrooloose/NERDTree'
     " Auto pairs for '(' '[' '{'
     Plug 'jiangmiao/auto-pairs'
@@ -21,4 +23,5 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'itchyny/lightline.vim'
     " Comment
     Plug 'tpope/vim-commentary'
+
 call plug#end()

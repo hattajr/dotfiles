@@ -1,15 +1,30 @@
+
+# figlet -f slant "( .-.)"
+# echo "( ._.)"
+# echo "\n¯\_(ツ)_/¯\n"
+# echo "\n◕_◕\n"
+echo "\n(ง •̀_•́)ง\n"
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+alias time='/usr/bin/time'
+bindkey '^ ' autosuggest-accept
+
 # If you come from bash you might have to change your $PATH.
+export LC_ALL=en_US.UTF-8
+export PATH=$PATH:$HOME/minio-binaries/
+export PATH=$HOME/.cargo/bin:$PATH
+export PATH=$PATH:/opt/cqlsh-5.1.20/bin
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=/opt/conda/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="$HOME/.oh-my-zsh"
 export ZSH_DISABLE_COMPFIX=true
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -78,7 +93,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.zprofile
@@ -116,6 +131,9 @@ source $HOME/.zprofile
 if [ -x "$(command -v exa)" ]; then
     alias ls="exa"
     alias la="exa --long --all --group"
+fi
+if [ -x "$(command -v batcat)" ]; then
+    alias cat="batcat"
 fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

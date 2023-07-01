@@ -13,8 +13,6 @@ source $HOME/.config/nvim/keys/mappings.vim
 
 if exists('g:vscode')
 	source ~/.config/nvim/general/vscode_settings.vim
-else
-    source ~/.config/nvim/after/themes/tokyonight.vim
 endif
 
 	

@@ -1,5 +1,23 @@
 " TODO there is a more contemporary version of this file
 "VSCode
+set relativenumber
+
+split_size = 5
+loop_num = math.ceil(len(id_list)/float(split_size))
+done_num = 0
+for idx in range(loop_num):
+    if idx == loop_num-1:
+        ids_ = id_list[idx*5:]
+    else:
+        ids_ = id_list[idx*5:(idx+1)*5]
+    print(f"ToDo num: {len(ids_)} | ID List: {ids_}")
+
+    get_data_from_latte(df_merged_ref, ids_, save_dir)
+
+    done_num += len(ids_)
+
+    print(f"IDX: {idx} | Done num: {done_num} | All num: {len(id_list)}"
+
 function! s:split(...) abort
     let direction = a:1
     let file = a:2

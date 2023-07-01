@@ -10,7 +10,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 
 
     " Theme
-    Plug 'folke/tokyonight.nvim', { 'branch': 'main' } 
+    Plug 'projekt0n/github-nvim-theme', { 'tag': 'v0.0.7' }
     " Better Syntax Support
     Plug 'sheerun/vim-polyglot'
     " Copilot

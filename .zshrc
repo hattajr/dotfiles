@@ -20,6 +20,7 @@ export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$PATH:/opt/cqlsh-5.1.20/bin
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=/opt/conda/bin:$PATH
+export PATH=$PATH:/usr/local/go/go/bin
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.oh-my-zsh"

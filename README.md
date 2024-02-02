@@ -1,28 +1,16 @@
-## setup nvim
-
-note: Assume you have neovim >= 0.5
+## How to setup
 
 1. Clone the repo in the `$HOME` directory
 
     ```bash
-    git clone https://github.com/hattajr/dotfiles.git ~/.dotfiles
+    git clone https://github.com/hattajr/dotfiles.git ~/dotfiles
     ```
-1. Install nvim > 0.5
-
-1. Install git
-
-1. Install zsh 
+1. Create stow from inside `~/dotfiles`
     ```bash
-	# install zsh & p10k
-	sh -c "$(curl -fsSL https://raw.github.com/obbyrussell/oh-my-zsh/master/tools/install.sh)" 
-	git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10kr
+    stow .
     ```
-
-1. Create sysmlink directory from `.dotfiles` to `$HOME`
-
-    ```bash
-    chmod +x ~/.dotfiles/symlink.sh
-    ~/.dotfiles/symlink.sh
-    ``````
-
+1. Setup tmux source
+    ```
+    tmux source-file ~/.config/tmux/tmux.conf
+    ```
 1. Open `nvim` and `:PluginInstall`

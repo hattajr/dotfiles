@@ -40,5 +40,7 @@
   add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
   
 
-  [diff]
+[diff]
   tool = nvimdiff
+[credential]
+	helper = store

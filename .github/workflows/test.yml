@@ -1,0 +1,19 @@
+name: Dotfiles Test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Run Dotfiles Tests
+        shell: bash
+        run: |
+          ./letsgo.sh

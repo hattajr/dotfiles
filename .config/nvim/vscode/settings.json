@@ -663,7 +663,7 @@
   "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/chris/.vscode-oss/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
   "workbench.list.automaticKeyboardNavigation": false,
   "oneDarkPro.editorTheme": "onedarkPro",
-  "python.languageServer": "Microsoft",
+  "python.languageServer": "Default",
   "editor.scrollbar.horizontal": "hidden",
   "editor.scrollbar.vertical": "hidden",
   "kite.showWelcomeNotificationOnStartup": false,
@@ -759,7 +759,7 @@
       ]
     }
   },
-  "workbench.activityBar.location": "hidden",
+  // "workbench.activityBar.location": "hidden",
   "workbench.colorCustomizations": {}
   // COLOR CUSTOMIZATION
   // "workbench.colorCustomizations": {

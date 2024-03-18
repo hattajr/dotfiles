@@ -15,6 +15,7 @@ export TERM=xterm-256color
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.oh-my-zsh"
 export ZSH_DISABLE_COMPFIX=true
+export PATH=$PATH:/opt/homebrew/bin
 
 ZSH_THEME="robbyrussell"
 

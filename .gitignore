@@ -5,3 +5,9 @@
 .config/matplotlib
 
 .config/tmux/plugins
+
+.config/nvim/autoload/
+.config/iterm2/
+**.settings.json.swp
+
+

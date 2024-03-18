@@ -1,0 +1,7 @@
+inherits = "ayu_mirage"
+"comment" = { fg = "gray", modifiers = ["italic"] }
+
+[palette]
+background = "#1f2430"
+
+

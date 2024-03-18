@@ -1,1 +1,7 @@
 .config/atuin
+.config/go
+.config/htop
+.convig/procps
+.config/matplotlib
+
+.config/tmux/plugins

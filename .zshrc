@@ -7,12 +7,18 @@ bindkey '^ ' autosuggest-accept
 export LC_ALL=en_US.UTF-8
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/go/bin:$PATH
+
+
+export TERM=xterm-256color
 
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.oh-my-zsh"
 export ZSH_DISABLE_COMPFIX=true
 
 ZSH_THEME="robbyrussell"
+
+
 
 # ZSH PLUGINS
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
@@ -27,6 +33,7 @@ if [ -x "$(command -v exa)" ]; then
 fi
 if [ -x "$(command -v batcat)" ]; then
     alias cat="batcat"
+    alias bat="batcat"
 fi
 
 
@@ -34,3 +41,5 @@ fi
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -1,0 +1,44 @@
+# --- Python
+[[language]]
+name = "python"
+comment-token = "#"
+language-servers = ["pyright", "ruff"]
+indent = { tab-width = 4, unit = "    " }
+auto-format = true
+rulers = [99]
+
+
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
+
+[language-server.pyright.config.python.analysis]
+typeCheckingMode = "basic"
+autoImportCompletions = true
+
+# [language-server.pyright.config]
+# reportMissingTypeStubs = false
+# venvPath = "."
+# venv = ".venv"
+
+
+[language-server.ruff]
+command = "ruff-lsp"
+
+[language-server.ruff.config]
+settings = {run = "onSave" }
+
+[language.formatter]
+command = "ruff"
+args = ["format", "-"]
+
+
+
+
+
+# -- GO
+[[languages]]
+name = "go"
+auto-format = true
+formatter = { command = "goimports" }
+

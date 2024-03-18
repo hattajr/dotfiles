@@ -1,4 +1,4 @@
-
+{
   "vscode-neovim.neovimExecutablePaths.darwin": "/usr/local/bin/nvim",
   "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
   "vscode-neovim.neovimInitVimPaths.darwin": "$HOME/.config/nvim/init.vim",
@@ -160,7 +160,7 @@
           "type": "command",
           "command": "workbench.action.debug.stepOut"
         },
-        
+        {
           "key": "b",
           "name": "Toggle breakpoint",
           "type": "command",
@@ -714,7 +714,8 @@
     "terminal.ansiBrightMagenta": "#c678dd",
     "terminal.ansiBrightRed": "#e06c75",
     "terminal.ansiBrightWhite": "#ffffff",
-    "terminal.ansiBrightYellow": "#d19a66",
-    },
-  },
+    "terminal.ansiBrightYellow": "#d19a66"
+    }
+  }
 }
+

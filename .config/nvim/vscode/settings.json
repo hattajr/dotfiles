@@ -51,11 +51,16 @@
       "type": "whole-line"
     },
     "FIXME": {
-      "foreground": "orange",
+      "foreground": "yellow",
       "icon": "beaker",
       "type": "whole-line"
     },
     "TODO": {
+      "foreground": "BLUE",
+      "icon": "check",
+      "type": "whole-line"
+    },
+    "NOTE": {
       "foreground": "green",
       "icon": "check",
       "type": "whole-line"

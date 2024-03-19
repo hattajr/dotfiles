@@ -12,7 +12,7 @@ source $HOME/.config/nvim/general/settings.vim
 source $HOME/.config/nvim/keys/mappings.vim
 
 if exists('g:vscode')
-	source ~/.config/nvim/general/vscode_settings.vim
+	source $HOME/.config/nvim/vscode/settings.vim
 endif
 
 	

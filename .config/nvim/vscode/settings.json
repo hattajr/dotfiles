@@ -44,24 +44,34 @@
   "python.dataScience.alwaysTrustNotebooks": true,
   "redhat.telemetry.enabled": false,
   "terminal.integrated.fontSize": 19,
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "NOTE",
+    "XXX",
+    "[ ]",
+    "[x]"
+  ],
   "todo-tree.highlights.customHighlight": {
     "BUG": {
-      "foreground": "red",
+      "foreground": "tomato",
       "icon": "bug",
       "type": "whole-line"
     },
     "FIXME": {
-      "foreground": "yellow",
+      "foreground": "khaki",
       "icon": "beaker",
       "type": "whole-line"
     },
     "TODO": {
-      "foreground": "BLUE",
+      "foreground": "mediumseagreen",
       "icon": "check",
       "type": "whole-line"
     },
     "NOTE": {
-      "foreground": "green",
+      "foreground": "darkgrey",
       "icon": "check",
       "type": "whole-line"
     }

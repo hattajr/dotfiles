@@ -42,5 +42,5 @@
 
 [diff]
   tool = nvimdiff
-[credential]
-	helper = store
+[safe]
+	directory = /home/hattajr/dev/Caffeine

@@ -6,7 +6,9 @@
 set -euo pipefail
 
 mkdir -p "$HOME/.pi/agent"
-cat > "$HOME/.pi/agent/auth.json" <<'PI_AUTH_EOF'
+content="$(cat <<'PI_AUTH_EOF'
 {{ (bitwarden "item" "pi-auth-json").notes }}
 PI_AUTH_EOF
+)"
+printf '%s' "$content" > "$HOME/.pi/agent/auth.json"
 chmod 600 "$HOME/.pi/agent/auth.json"

@@ -1,8 +1,7 @@
 [user]
-	email = 53370870+hattajr@users.noreply.github.com
-	name = hattajr
+	email = {{ .user.email }}
+	name = {{ .user.name }}
 [core]
-	excludesfile = ~/.gitignore
 	editor = nvim
 	ignorecase = false
 [push]
@@ -38,9 +37,6 @@
   edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
   # add conflicted file on merge
   add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
-  
 
 [diff]
   tool = nvimdiff
-[safe]
-	directory = /home/hattajr/dev/Caffeine

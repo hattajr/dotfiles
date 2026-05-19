@@ -3,7 +3,7 @@ set -euo pipefail
 echo ">>> chezmoi bootstrap: installing required tools"
 
 {{ if eq .chezmoi.os "linux" -}}
-needed=(zsh tmux git curl xclip)
+needed=(zsh tmux git curl xclip fzf)
 to_install=()
 for pkg in "${needed[@]}"; do
     dpkg -s "$pkg" >/dev/null 2>&1 || to_install+=("$pkg")
@@ -32,5 +32,26 @@ else
     echo ">>> brew packages already present"
 fi
 {{ end -}}
+
+# --- oh-my-zsh + plugins ---
+ZSH_DIR="${ZSH:-$HOME/.oh-my-zsh}"
+if [ ! -d "$ZSH_DIR" ]; then
+    echo ">>> Installing oh-my-zsh"
+    RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+    echo ">>> oh-my-zsh already present"
+fi
+
+ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$ZSH_DIR/custom}"
+clone_plugin() {
+    local repo="$1" dest="$2"
+    if [ ! -d "$dest" ]; then
+        echo ">>> Cloning $(basename "$dest")"
+        git clone --depth 1 "$repo" "$dest"
+    fi
+}
+clone_plugin https://github.com/zsh-users/zsh-autosuggestions     "$ZSH_CUSTOM_DIR/plugins/zsh-autosuggestions"
+clone_plugin https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM_DIR/plugins/zsh-syntax-highlighting"
 
 echo ">>> bootstrap done"

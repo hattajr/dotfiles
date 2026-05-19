@@ -1,7 +1,3 @@
-.config/atuin
-.config/go
-.config/htop
-.convig/procps
-.config/matplotlib
-
-.config/tmux/plugins
+.claude/
+*.swp
+.DS_Store

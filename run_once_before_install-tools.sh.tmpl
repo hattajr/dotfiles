@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo ">>> chezmoi bootstrap: installing required tools"
+
+{{ if eq .chezmoi.os "linux" -}}
+needed=(zsh tmux git curl xclip)
+to_install=()
+for pkg in "${needed[@]}"; do
+    dpkg -s "$pkg" >/dev/null 2>&1 || to_install+=("$pkg")
+done
+if (( ${#to_install[@]} > 0 )); then
+    echo ">>> apt install: ${to_install[*]}"
+    sudo apt-get update
+    sudo apt-get install -y "${to_install[@]}"
+else
+    echo ">>> apt packages already present"
+fi
+{{ else if eq .chezmoi.os "darwin" -}}
+if ! command -v brew >/dev/null 2>&1; then
+    echo ">>> Installing Homebrew"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+needed=(zsh tmux git curl bat eza fzf)
+to_install=()
+for pkg in "${needed[@]}"; do
+    brew list "$pkg" >/dev/null 2>&1 || to_install+=("$pkg")
+done
+if (( ${#to_install[@]} > 0 )); then
+    echo ">>> brew install: ${to_install[*]}"
+    brew install "${to_install[@]}"
+else
+    echo ">>> brew packages already present"
+fi
+{{ end -}}
+
+echo ">>> bootstrap done"

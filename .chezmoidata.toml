@@ -1,0 +1,7 @@
+# Static data available in templates as `.user.*`
+# Update here, then `chezmoi apply` to propagate.
+
+[user]
+name = "hattajr"
+email = "53370870+hattajr@users.noreply.github.com"
+github_user = "hattajr"

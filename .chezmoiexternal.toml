@@ -1,0 +1,9 @@
+# Externally-cloned repos chezmoi pulls into $HOME.
+# `chezmoi apply` clones if missing, pulls if older than refreshPeriod.
+
+[".pi"]
+    type = "git-repo"
+    url = "git@github.com:hattajr/.pi.git"
+    refreshPeriod = "168h"
+    [".pi".pull]
+        args = ["--ff-only"]

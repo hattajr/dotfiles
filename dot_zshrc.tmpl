@@ -6,10 +6,14 @@ echo "\n(ง •̀_•́)ง\n"
 export LC_ALL=en_US.UTF-8
 export TERM=xterm-256color
 export COLORTERM=truecolor
+export EDITOR=vim
+export VISUAL=vim
 
-# --- Homebrew (must come first on darwin so brew tools win over later prepends) ---
+# --- Homebrew (must come first so brew tools win over later prepends) ---
 {{- if eq .chezmoi.os "darwin" }}
 export PATH="/opt/homebrew/bin:$PATH"
+{{- else if eq .chezmoi.os "linux" }}
+[ -x /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 {{- end }}
 
 # --- PATH ---

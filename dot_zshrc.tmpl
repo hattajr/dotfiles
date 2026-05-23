@@ -84,7 +84,7 @@ export FZF_CTRL_T_OPTS="
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
 # --- Prompt ---
-PROMPT='%(?:%{$fg[cyan]%}%1{➜%} :%{%}%1{➜%} ) %{%}%~%{%} $(git_prompt_info) '
+PROMPT='%{$fg[green]%}%n@%m%{$reset_color%} %(?:%{$fg[cyan]%}%1{➜%} :%{$fg[red]%}%1{➜%} ) %{$reset_color%}%~ $(git_prompt_info) '
 
 # --- NVM ---
 export NVM_DIR="$HOME/.nvm"

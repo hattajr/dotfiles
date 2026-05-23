@@ -5,7 +5,7 @@ Managed by [chezmoi](https://chezmoi.io). Source of truth lives in this repo.
 ## Prerequisites (must exist before `chezmoi init`)
 
 1. **SSH key authorized for `github.com/hattajr`** — needed to clone this repo and the `~/.pi` external. PATs are not used.
-2. **Bitwarden CLI (`bw`) installed and unlocked** — `run_onchange_after_setup-pi-auth.sh.tmpl` reads a secret from Bitwarden during `chezmoi apply`. If `bw` is missing or `BW_SESSION` is empty, `apply` will hard-fail.
+2. **Bitwarden CLI (`bw`) installed and unlocked** — `run_after_setup-pi-auth.sh` reads a secret from Bitwarden during `chezmoi apply`. If `bw` is missing or `BW_SESSION` is empty, `apply` will fail with a concise setup error.
 
 ## Bootstrap a new machine
 
@@ -29,7 +29,7 @@ What `apply` does automatically (in order):
 1. Runs `run_once_before_install-tools.sh` — apt/brew installs `zsh tmux git curl xclip fzf` (+ `bat eza` on macOS) and installs oh-my-zsh + `zsh-autosuggestions` + `zsh-syntax-highlighting`.
 2. Renders `dot_*` files to `~/`.
 3. Clones the `~/.pi` external via SSH.
-4. Runs `run_onchange_after_setup-pi-auth.sh` — writes `~/.pi/agent/auth.json` from Bitwarden.
+4. Runs `run_after_setup-pi-auth.sh` — writes `~/.pi/agent/auth.json` from Bitwarden.
 
 ## Tools NOT auto-installed (install manually if you want them)
 
@@ -71,11 +71,11 @@ If a tool is missing, the matching alias/PATH line silently no-ops — your shel
 | `.chezmoiignore` | per-OS file exclusions |
 | `.chezmoidata.toml` | static template data (name, email) |
 | `run_once_before_install-tools.sh.tmpl` | bootstrap apt/brew tools + oh-my-zsh |
-| `run_onchange_after_setup-pi-auth.sh.tmpl` | writes `~/.pi/agent/auth.json` from Bitwarden |
+| `run_after_setup-pi-auth.sh` | writes `~/.pi/agent/auth.json` from Bitwarden |
 
 ## Secrets
 
-`~/.pi/agent/auth.json` is fetched from the Bitwarden secure note **`pi-auth-json`**. Re-runs whenever the note content changes.
+`~/.pi/agent/auth.json` is fetched from the Bitwarden secure note **`pi-auth-json`**.
 
 If `chezmoi apply` fails with a Bitwarden error: `export BW_SESSION="$(bw unlock --raw)"` first.
 

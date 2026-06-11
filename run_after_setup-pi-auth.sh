@@ -12,21 +12,25 @@ set -euo pipefail
 item_name="pi-auth-json"
 target="$HOME/.pi/agent/auth.json"
 
+ok()   { printf '[v] %s\n' "$1"; }
+step() { printf '[>] %s\n' "$1"; }
 fail() {
-  printf '%s\n' "$1" >&2
+  printf '[x] %s\n' "$1" >&2
   exit 1
 }
 
+printf 'setup-pi-auth: syncing %s\n' "$target"
 mkdir -p "$(dirname "$target")"
 
 if ! command -v bw >/dev/null 2>&1; then
-  fail "chezmoi: setup-pi-auth: Bitwarden CLI 'bw' is not installed.
+  fail "Bitwarden CLI 'bw' is not installed.
   Fix - install bw, then retry:
     npm install -g @bitwarden/cli
     chezmoi apply -R
   Or skip this secret script for now:
     chezmoi apply -R --exclude scripts"
 fi
+ok "bitwarden cli found"
 
 # No terminal to prompt at -> never hang waiting for a password; fail fast instead.
 if [[ ! -t 0 ]]; then
@@ -39,18 +43,19 @@ trap 'rm -f "$tmp_err"' EXIT
 # Fetch the item. bw reads BW_SESSION from the env when valid; otherwise it prompts
 # for the master password (type it). The 2nd 'tee' keeps the prompt visible while we
 # still capture stderr for classification.
+step "reading vault item '$item_name' (type your master password if prompted)"
 if ! item_json="$(bw get item "$item_name" 2> >(tee "$tmp_err" >&2))"; then
   err="$(tr -d '\r' < "$tmp_err")"
 
   if grep -qi "Not logged in" <<<"$err" || grep -qi "You are not logged in" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: Bitwarden CLI is not logged in.
+    fail "Bitwarden CLI is not logged in.
   Fix - log in, then retry (you will be asked for your master password):
     bw login
     chezmoi apply -R"
   fi
 
   if grep -qi "No item found" <<<"$err" || grep -qi "not found" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: Bitwarden item '$item_name' was not found.
+    fail "Bitwarden item '$item_name' was not found.
   Fix - sync the vault, confirm the item exists, then retry:
     bw sync
     bw get item $item_name
@@ -58,7 +63,7 @@ if ! item_json="$(bw get item "$item_name" 2> >(tee "$tmp_err" >&2))"; then
   fi
 
   if grep -qi "More than one result" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: More than one vault item is named '$item_name'.
+    fail "More than one vault item is named '$item_name'.
   Fix - rename or delete the duplicate in your vault, sync, then retry:
     bw sync
     bw list items --search $item_name
@@ -66,21 +71,22 @@ if ! item_json="$(bw get item "$item_name" 2> >(tee "$tmp_err" >&2))"; then
   fi
 
   if grep -qi "Master password" <<<"$err" || grep -qi "Vault is locked" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: vault was locked and no master password was given.
+    fail "vault was locked and no master password was given.
   Fix - run apply from a terminal and TYPE your master password at the prompt:
     chezmoi apply -R"
   fi
 
-  fail "chezmoi: setup-pi-auth: Failed to read Bitwarden item '$item_name'. Underlying error:
+  fail "failed to read Bitwarden item '$item_name'. Underlying error:
     ${err:-<no stderr captured>}
   Debug, then retry:
     bw status
     bw get item $item_name
     chezmoi apply -R"
 fi
+ok "vault item retrieved"
 
 if ! content="$(printf '%s' "$item_json" | python3 -c 'import json, sys; sys.stdout.write((json.load(sys.stdin).get("notes") or ""))' 2>"$tmp_err")"; then
-  fail "chezmoi: setup-pi-auth: Bitwarden returned invalid JSON for '$item_name'.
+  fail "Bitwarden returned invalid JSON for '$item_name'.
   Fix - re-sync and inspect the raw item, then retry:
     bw sync
     bw get item $item_name
@@ -88,8 +94,10 @@ if ! content="$(printf '%s' "$item_json" | python3 -c 'import json, sys; sys.std
 fi
 
 if [[ -f "$target" ]] && cmp -s <(printf '%s' "$content") "$target"; then
+  ok "auth.json already up to date"
   exit 0
 fi
 
 printf '%s' "$content" > "$target"
 chmod 600 "$target"
+ok "wrote $target (chmod 600)"

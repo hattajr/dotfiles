@@ -54,9 +54,23 @@ If a tool is missing, the matching alias/PATH line silently no-ops — your shel
 | Preview what `apply` would do | `chezmoi diff` |
 | Apply local source -> `$HOME` | `chezmoi apply -v` |
 | Pull remote + apply in one shot | `chezmoi update` |
+| Apply + force-check remote `~/.pi` | `chezmoi apply -R` |
 | Add a new file to tracking | `chezmoi add ~/.foorc` |
 | Open the source dir in a shell | `chezmoi cd` |
 | Skip Bitwarden-dependent scripts | `chezmoi apply --exclude scripts` |
+
+### Refreshing the `~/.pi` external
+
+`~/.pi` is a `git-repo` external with `refreshPeriod = "168h"` (7 days), so a plain
+`chezmoi apply` only pulls from the remote once the local cache is that old. To force
+chezmoi to check the remote on this run, pass `-R` (`--refresh-externals`, defaults to
+`always`):
+
+| Mode | Behavior |
+|---|---|
+| `chezmoi apply` (`auto`, default) | Pull `~/.pi` only if cache > 7 days old |
+| `chezmoi apply -R` (`always`) | Always pull the remote `~/.pi` this run |
+| `chezmoi apply --refresh-externals=never` | Use the cached copy only |
 
 ## Layout
 

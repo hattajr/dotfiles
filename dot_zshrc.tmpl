@@ -93,3 +93,43 @@ export NVM_DIR="$HOME/.nvm"
 if command -v nvm >/dev/null 2>&1; then
   nvm use --silent >/dev/null 2>&1 || nvm use default --silent >/dev/null 2>&1
 fi
+
+# --- tmux helper: `t <subcommand>` ---
+#   t s <slug>   new named session (attaches if it already exists)
+#   t a <slug>   attach to an existing session
+#   t ls         list all sessions
+#   t kda        kill ALL sessions (kills the server)
+t() {
+  case "$1" in
+    s)
+      local name="$2"
+      if [ -z "$name" ]; then echo "usage: t s <slug>" >&2; return 1; fi
+      if [ -n "$TMUX" ]; then
+        # already inside tmux: create if missing, then switch to it
+        tmux has-session -t "$name" 2>/dev/null || tmux new-session -d -s "$name"
+        tmux switch-client -t "$name"
+      else
+        tmux new-session -A -s "$name"
+      fi
+      ;;
+    a)
+      local name="$2"
+      if [ -z "$name" ]; then echo "usage: t a <slug>" >&2; return 1; fi
+      if [ -n "$TMUX" ]; then
+        tmux switch-client -t "$name"
+      else
+        tmux attach-session -t "$name"
+      fi
+      ;;
+    ls)
+      tmux ls
+      ;;
+    kda)
+      tmux kill-server 2>/dev/null && echo "killed all tmux sessions" || echo "no tmux server running"
+      ;;
+    *)
+      echo "usage: t {s <slug>|a <slug>|ls|kda}" >&2
+      return 1
+      ;;
+  esac
+}

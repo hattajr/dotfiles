@@ -18,7 +18,18 @@ if [ ! -d "$TPM_DIR" ]; then
 	git clone --depth 1 https://github.com/tmux-plugins/tpm "$TPM_DIR"
 fi
 
-# install_plugins / update_plugins do not need a running tmux server.
+# TPM reads its plugin path only from the tmux server env var, which normally
+# gets set by the tpm line in tmux.conf running inside a live session. On a
+# headless apply that never happens, so install_plugins aborts with
+# "unknown variable: TMUX_PLUGIN_MANAGER_PATH". Set it ourselves (TPM's own XDG
+# default): exporting it lets the server TPM spawns inherit it; the
+# set-environment covers an already-running server.
+export TMUX_PLUGIN_MANAGER_PATH="$HOME/.config/tmux/plugins/"
+tmux start-server 2>/dev/null || true
+tmux set-environment -g TMUX_PLUGIN_MANAGER_PATH "$TMUX_PLUGIN_MANAGER_PATH" 2>/dev/null || true
+
+# install_plugins / update_plugins read the plugin list from tmux.conf on disk,
+# so no live session is needed beyond the env var above.
 echo "Installing tmux plugins"
 "$TPM_DIR/bin/install_plugins"
 echo "Updating tmux plugins"

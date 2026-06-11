@@ -18,42 +18,77 @@ fail() {
 mkdir -p "$(dirname "$target")"
 
 if ! command -v bw >/dev/null 2>&1; then
-  fail "chezmoi: setup-pi-auth: Bitwarden CLI 'bw' is not installed. Install it, then retry 'chezmoi apply'. Or skip secret scripts with: chezmoi apply --exclude scripts"
+  fail "chezmoi: setup-pi-auth: Bitwarden CLI 'bw' is not installed.
+  Fix - install bw, then retry:
+    npm install -g @bitwarden/cli
+    chezmoi apply -R
+  Or skip this secret script for now:
+    chezmoi apply -R --exclude scripts"
 fi
 
 if [[ -z "${BW_SESSION:-}" ]]; then
-  fail "chezmoi: setup-pi-auth: BW_SESSION is not set. Unlock Bitwarden first with: export BW_SESSION=\"\$(bw unlock --raw)\""
-fi
-
-# A non-empty BW_SESSION can still be stale; verify the vault is actually unlocked.
-vault_status="$(bw status --session "$BW_SESSION" 2>/dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin).get("status",""))' 2>/dev/null || true)"
-if [[ "$vault_status" != "unlocked" ]]; then
-  fail "chezmoi: setup-pi-auth: Bitwarden session is '${vault_status:-invalid}', not 'unlocked'. Refresh it with: export BW_SESSION=\"\$(bw unlock --raw)\" && bw sync"
+  fail "chezmoi: setup-pi-auth: BW_SESSION is not set.
+  Fix - unlock Bitwarden, export the session, then retry:
+    export BW_SESSION=\"\$(bw unlock --raw)\"
+    bw sync
+    chezmoi apply -R"
 fi
 
 tmp_err="$(mktemp)"
 trap 'rm -f "$tmp_err"' EXIT
 
+# Attempt the fetch directly. With BW_NOINTERACTION a stale/locked session fails
+# fast instead of prompting, and we classify the error below. We do NOT pre-gate
+# on 'bw status' because it does not reliably reflect the --session token.
 if ! item_json="$(bw get item "$item_name" --session "$BW_SESSION" 2>"$tmp_err")"; then
   err="$(tr -d '\r' < "$tmp_err")"
 
+  if grep -qi "Vault is locked" <<<"$err" || grep -qi "mac failed" <<<"$err" || grep -qi "Session key is invalid" <<<"$err"; then
+    fail "chezmoi: setup-pi-auth: Bitwarden vault is locked or the session expired.
+  Fix - get a fresh session, then retry:
+    export BW_SESSION=\"\$(bw unlock --raw)\"
+    bw sync
+    chezmoi apply -R"
+  fi
+
   if grep -qi "Incorrect password" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: Bitwarden rejected the password while unlocking the vault. Re-run: export BW_SESSION=\"\$(bw unlock --raw)\""
+    fail "chezmoi: setup-pi-auth: Bitwarden rejected the master password.
+  Fix - unlock again with the correct password, then retry:
+    export BW_SESSION=\"\$(bw unlock --raw)\"
+    chezmoi apply -R"
   fi
 
   if grep -qi "Not logged in" <<<"$err" || grep -qi "You are not logged in" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: Bitwarden CLI is not logged in. Run 'bw login', then 'export BW_SESSION=\"\$(bw unlock --raw)\"', and retry."
+    fail "chezmoi: setup-pi-auth: Bitwarden CLI is not logged in.
+  Fix - log in, unlock, then retry:
+    bw login
+    export BW_SESSION=\"\$(bw unlock --raw)\"
+    bw sync
+    chezmoi apply -R"
   fi
 
   if grep -qi "No item found" <<<"$err" || grep -qi "not found" <<<"$err"; then
-    fail "chezmoi: setup-pi-auth: Bitwarden item '$item_name' was not found. Check the secure note name and run 'bw sync'."
+    fail "chezmoi: setup-pi-auth: Bitwarden item '$item_name' was not found.
+  Fix - sync the vault and confirm the item exists, then retry:
+    bw sync --session \"\$BW_SESSION\"
+    bw get item $item_name --session \"\$BW_SESSION\"
+    chezmoi apply -R"
   fi
 
-  fail "chezmoi: setup-pi-auth: Failed to read Bitwarden item '$item_name'. Run 'bw status' and 'bw get item $item_name --session \"\$BW_SESSION\"' to debug."
+  fail "chezmoi: setup-pi-auth: Failed to read Bitwarden item '$item_name'. Underlying error:
+    ${err:-<no stderr captured>}
+  Debug, then retry:
+    bw status --session \"\$BW_SESSION\"
+    bw get item $item_name --session \"\$BW_SESSION\"
+    chezmoi apply -R"
 fi
 
 if ! content="$(printf '%s' "$item_json" | python3 -c 'import json, sys; sys.stdout.write((json.load(sys.stdin).get("notes") or ""))' 2>"$tmp_err")"; then
-  fail "chezmoi: setup-pi-auth: Bitwarden returned invalid JSON for '$item_name'."
+  fail "chezmoi: setup-pi-auth: Bitwarden returned invalid JSON for '$item_name'.
+  Fix - re-sync and inspect the raw item, then retry:
+    bw sync --session \"\$BW_SESSION\"
+    bw get item $item_name --session \"\$BW_SESSION\"
+    chezmoi apply -R"
 fi
 
 if [[ -f "$target" ]] && cmp -s <(printf '%s' "$content") "$target"; then

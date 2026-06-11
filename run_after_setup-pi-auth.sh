@@ -4,6 +4,9 @@
 # Requires: bw CLI installed and unlocked (BW_SESSION exported).
 set -euo pipefail
 
+# Never let bw drop into an interactive master-password prompt; fail fast instead of hanging.
+export BW_NOINTERACTION=true
+
 item_name="pi-auth-json"
 target="$HOME/.pi/agent/auth.json"
 
@@ -20,6 +23,12 @@ fi
 
 if [[ -z "${BW_SESSION:-}" ]]; then
   fail "chezmoi: setup-pi-auth: BW_SESSION is not set. Unlock Bitwarden first with: export BW_SESSION=\"\$(bw unlock --raw)\""
+fi
+
+# A non-empty BW_SESSION can still be stale; verify the vault is actually unlocked.
+vault_status="$(bw status --session "$BW_SESSION" 2>/dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin).get("status",""))' 2>/dev/null || true)"
+if [[ "$vault_status" != "unlocked" ]]; then
+  fail "chezmoi: setup-pi-auth: Bitwarden session is '${vault_status:-invalid}', not 'unlocked'. Refresh it with: export BW_SESSION=\"\$(bw unlock --raw)\" && bw sync"
 fi
 
 tmp_err="$(mktemp)"

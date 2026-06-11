@@ -5,7 +5,7 @@ Managed by [chezmoi](https://chezmoi.io). Source of truth lives in this repo.
 ## Prerequisites (must exist before `chezmoi init`)
 
 1. **SSH key authorized for `github.com/hattajr`** — needed to clone this repo and the `~/.pi` external. PATs are not used.
-2. **Bitwarden CLI (`bw`) installed and unlocked** — `run_after_setup-pi-auth.sh` reads a secret from Bitwarden during `chezmoi apply`. If `bw` is missing or `BW_SESSION` is empty, `apply` will fail with a concise setup error.
+2. **Bitwarden CLI (`bw`) installed and logged in** — `run_after_setup-pi-auth.sh` reads a secret from Bitwarden during `chezmoi apply`. If the vault is locked, `bw` prompts for your master password (type it). If `bw` is missing, or there is no terminal to prompt at, `apply` fails fast with a concise setup error. See [Secrets](#secrets).
 
 ## Bootstrap a new machine
 
@@ -59,6 +59,30 @@ If a tool is missing, the matching alias/PATH line silently no-ops — your shel
 | Open the source dir in a shell | `chezmoi cd` |
 | Skip Bitwarden-dependent scripts | `chezmoi apply --exclude scripts` |
 
+### Avoiding drift (edit the source, not `$HOME`)
+
+The source dir is the only source of truth. If you edit a tracked file **directly in
+`$HOME`** (e.g. `vim ~/.zshrc`), that change is invisible to chezmoi and never reaches
+your other machines — the classic "I added it but the other box doesn't have it" trap.
+
+| Situation | Command |
+|---|---|
+| Edit a tracked file the right way | `chezmoi edit ~/.zshrc` (opens the source) |
+| You already edited `~/.zshrc` directly — pull it back into the source | `chezmoi re-add ~/.zshrc` |
+| Check whether `$HOME` has drifted from the source | `chezmoi diff` (empty output = no drift) |
+
+After `chezmoi re-add` / `chezmoi edit`, commit and push from the source dir so other
+machines get it:
+
+```bash
+chezmoi cd
+git add -A && git commit -m "..." && git push
+```
+
+> Note: templated files (`*.tmpl`, e.g. `dot_zshrc.tmpl`) cannot be round-tripped
+> cleanly by `re-add` — it would overwrite the template logic with rendered output.
+> For those, edit the source with `chezmoi edit ~/.zshrc` instead.
+
 ### Refreshing the `~/.pi` external
 
 `~/.pi` is a `git-repo` external with `refreshPeriod = "168h"` (7 days), so a plain
@@ -89,8 +113,19 @@ chezmoi to check the remote on this run, pass `-R` (`--refresh-externals`, defau
 
 ## Secrets
 
-`~/.pi/agent/auth.json` is fetched from the Bitwarden secure note **`pi-auth-json`**.
+`~/.pi/agent/auth.json` is fetched from the Bitwarden secure note **`pi-auth-json`** by
+`run_after_setup-pi-auth.sh`. It uses `BW_SESSION` when valid; otherwise `bw` prompts
+for your master password — **type it** at the `? Master password:` prompt (pressing
+Enter on an empty prompt fails). The script logs its progress as a `[v]` / `[x]`
+checklist.
 
-If `chezmoi apply` fails with a Bitwarden error: `export BW_SESSION="$(bw unlock --raw)"` first.
+On some machines the `bw` session key is not honored (short vault timeout), so a freshly
+exported `BW_SESSION` is rejected and `bw` falls back to the master-password prompt every
+run. That is expected — just type the password. To make sessions stick and run
+unattended, raise the vault timeout in the Bitwarden app/web vault
+(Settings -> Security -> **Vault timeout** -> a long duration or "Never").
+
+If `apply` errors instead of prompting (e.g. no terminal, as in cron/CI), the script
+fails fast with the exact commands to fix it.
 
 To skip secret-dependent scripts on a quick apply: `chezmoi apply --exclude scripts`.

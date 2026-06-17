@@ -46,6 +46,17 @@ These are referenced in configs but bootstrap leaves them to you:
 
 If a tool is missing, the matching alias/PATH line silently no-ops — your shell still loads cleanly.
 
+## Patched mosh (clipboard over mosh + tmux)
+
+Copying in tmux **inside a mosh session** does not reach the local clipboard with
+stock mosh 1.4.0 (two upstream bugs). The fix is a mosh build from the unmerged
+PR #1104 on **both** client and server, plus the tmux settings already in
+`dot_config/tmux/tmux.conf`. This is **local machine state** — not reproduced by
+`chezmoi apply`, so re-run the build on a new machine.
+
+Full build + install steps (server tap formula and Mac source build) live in
+[MOSH-OSC52.md](MOSH-OSC52.md).
+
 ## Daily commands
 
 | Task | Command |
